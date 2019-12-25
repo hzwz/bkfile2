@@ -9,7 +9,7 @@ pip install retrying
 
 ## A Simple Example
 * Upload bk.php to your webroot
-* Run bkfile.py
+* Run bkfile.py  
 ``
 python3 bkfile.py -u "http://domain/bk.php" -p "/var/wwwroot/html"
 ``
