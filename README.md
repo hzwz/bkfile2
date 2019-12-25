@@ -8,8 +8,8 @@ pip install retrying
 ``
 
 ## A Simple Example
-1. Upload bk.php to your webroot
-2. 
+* Upload bk.php to your webroot
+* 
 ``
 python3 bkfile.py -u "http://domain/bk.php" -p "/var/wwwroot/html"
 ``
