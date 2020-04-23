@@ -32,8 +32,8 @@ user_agent_list = [
     'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0',
     'Mozilla/5.0 (Windows NT 6.1; rv:2.0.1) Gecko/20100101 Firefox/4.0.1',
 ]
-extentions=['.php','.bak','.jsp','.csv','.asp','.asa','.php4','.sql','.txt','.html']
-
+extentions=['.php','.bak','.jsp','.csv','.asp','.asa','.php4','.sql','.txt','.html','.jpg','.png','.gif','.tpl','.log']
+current_path=os.path.abspath(os.path.dirname(__file__))
 def file_extension(path): 
     return os.path.splitext(path)[1] 
 
@@ -46,7 +46,7 @@ def get_html(url,path):
         data={'file':path.replace("is_file:","").strip()}   
     else:
         data={'path':path.replace("is_directory:","").strip()}             
-    r=requests.post(url,data=data,headers=headers)
+    r=requests.post(url,data=data,headers=headers,timeout=5)
     if r.status_code==200:
         return r.text
     else:
@@ -56,26 +56,27 @@ def get_html(url,path):
 def get_file(url,path):
     print(path)
     if 'is_file' not in path:
-        if not os.path.isfile(os.path.abspath(os.path.dirname(__file__))+path):
+        if not os.path.isfile(current_path+path):
             if "is_directory:" in path:
                 path2=path.replace("is_directory:","").strip()
             else:
                 path2=path
-            if not os.path.exists(os.path.abspath(os.path.dirname(__file__))+path2):
-                os.makedirs(os.path.abspath(os.path.dirname(__file__))+path2)
+            if not os.path.exists(current_path+"/"+path2.replace(":","")):
+
+                os.makedirs(os.path.abspath(current_path+"/"+path2.replace(":",""))
         html=get_html(url,path)
         paths=html.split("::::::")
         paths.pop()
         for line in paths:
             get_file(url,line)
     else:
-        my_file = Path(os.path.abspath(os.path.dirname(__file__))+path.replace("is_file:","").strip())
+        my_file = Path(os.path.abspath(current_path+"/"+path.replace("is_file:","").strip())
         if my_file.exists():
             return
-        if file_extension(os.path.abspath(os.path.dirname(__file__))+path.replace("is_file:","").strip()) in extentions:
+        if file_extension(os.path.abspath(current_path+"/"+path.replace("is_file:","").strip()) in extentions:
             html=get_html(url,path)
             if html!=None:
-                with open(os.path.abspath(os.path.dirname(__file__))+path.replace("is_file:","").strip(),'w') as af:
+                with open(os.path.abspath(current_path+"/"+path.replace("is_file:","").replace(":","").strip(),'w') as af:
                     af.write(html)
                     af.flush()
         else:
